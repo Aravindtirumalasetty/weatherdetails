@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowUp, FaArrowDown, FaWind } from "react-icons/fa";
-import {BiHappy} from "react-icons/bi"
-import {MdCompress,MdOutlineWaterDrop} from "react-icons/md"
+import { BiHappy } from "react-icons/bi";
+import { MdCompress, MdOutlineWaterDrop } from "react-icons/md";
 
+import hotbg from "../assets/hotbg.jpg";
+import coldbg from "../assets/cold.jpg";
+import rainy from "../assets/rainy.jpg"
 import styles from "../components/Weather.module.css";
 import { getWeatherdata } from "./WeatherService";
 const Weather = () => {
+
   const [params, setParams] = useState(null);
   const [units, setUnits] = useState("metric");
   const [city, setCity] = useState("paris");
+  const [bg,setBg]=useState(hotbg)
+
   useEffect(() => {
     const fetchWeatherdata = async () => {
       const data = await getWeatherdata(city, units);
-      
+
       setParams(data);
+      const threshold=units==='metric'?25:45;
+      if(data.temp<=threshold)setBg(coldbg);
+      else if(data.description.includes("rainy")|data.description.includes("clouds"))setBg(rainy);
+      else setBg(hotbg);
     };
     fetchWeatherdata();
   }, [units, city]);
@@ -33,8 +43,11 @@ const Weather = () => {
   };
   return (
     <>
+    <div className={`${styles.main}`}>
+
+   
       {params && (
-        <div className={`${styles.weathercontainer}`}>
+        <div className={`${styles.weathercontainer}`} style={{backgroundImage:`url(${bg})`}}>
           <div className={`${styles.searchbar}`}>
             <input
               type="text"
@@ -75,7 +88,7 @@ const Weather = () => {
               </div>
               <div className={`${styles.parambox}`}>
                 <div className={`${styles.params}`}>
-                  <BiHappy/>
+                  <BiHappy />
                   <small> feels-like</small>
                 </div>
                 <h3>{`${params.feels_like.toFixed()} °${
@@ -84,7 +97,7 @@ const Weather = () => {
               </div>
               <div className={`${styles.parambox}`}>
                 <div className={`${styles.params}`}>
-                  <FaWind/>
+                  <FaWind />
                   <small> speed</small>
                 </div>
                 <h2>{`${params.speed} ${
@@ -104,7 +117,7 @@ const Weather = () => {
               </div>
               <div className={`${styles.parambox}`}>
                 <div className={`${styles.params}`}>
-                  <MdCompress/>
+                  <MdCompress />
                   <small> Pressure</small>
                 </div>
                 <h2>{params.pressure} hPa</h2>
@@ -112,7 +125,7 @@ const Weather = () => {
 
               <div className={`${styles.parambox}`}>
                 <div className={`${styles.params}`}>
-                  <MdOutlineWaterDrop/>
+                  <MdOutlineWaterDrop />
                   <small> humidity</small>
                 </div>
                 <h2>{params.humidity}%</h2>
@@ -121,6 +134,7 @@ const Weather = () => {
           </div>
         </div>
       )}
+      </div>
     </>
   );
 };
