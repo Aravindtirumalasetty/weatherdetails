@@ -22,7 +22,7 @@ const Weather = () => {
       setParams(data);
       const threshold=units==='metric'?25:45;
       if(data.temp<=threshold)setBg(coldbg);
-      else if(data.description.includes("rainy")|data.description.includes("clouds"))setBg(rainy);
+      else if(data.description.includes("rain")|data.description.includes("clouds"))setBg(rainy);
       else setBg(hotbg);
     };
     fetchWeatherdata();
