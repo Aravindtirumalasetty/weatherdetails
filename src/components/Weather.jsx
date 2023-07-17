@@ -20,9 +20,9 @@ const Weather = () => {
       const data = await getWeatherdata(city, units);
 
       setParams(data);
-      const threshold=units==='metric'?20:45;
-      if(data.temp<=threshold)setBg(coldbg);
-      else if(data.description.includes("rain")|data.description.includes("clouds"))setBg(rainy);
+      const threshold=units==='metric'?25:60;
+     if(data.description.includes("rain")|data.description.includes("clouds"))setBg(rainy);
+      else if(data.temp<=threshold)setBg(coldbg);
       else setBg(hotbg);
     };
     fetchWeatherdata();
